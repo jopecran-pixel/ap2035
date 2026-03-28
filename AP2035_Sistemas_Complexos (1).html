@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AP 2035 · Sistemas Complexos</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f8f8f6;color:#1a1a1a;padding:2rem 1rem;line-height:1.6}
+.wrap{max-width:960px;margin:0 auto}
+h1{font-size:1.5rem;font-weight:600;margin-bottom:.25rem;color:#1a1a1a}
+.subtitle{font-size:.9rem;color:#666;margin-bottom:2rem}
+.tabs{display:flex;gap:6px;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab{padding:7px 14px;border:1px solid #ddd;border-radius:8px;cursor:pointer;font-size:13px;background:#fff;color:#555;transition:all .15s;font-family:inherit}
+.tab.active{font-weight:600;border-width:2px}
+.tab[data-s="c1"].active{background:#E6F1FB;border-color:#185FA5;color:#0C447C}
+.tab[data-s="c2"].active{background:#EAF3DE;border-color:#3B6D11;color:#27500A}
+.tab[data-s="c3"].active{background:#FCEBEB;border-color:#A32D2D;color:#791F1F}
+.tab[data-s="c4"].active{background:#EEEDFE;border-color:#534AB7;color:#3C3489}
+.tab[data-s="cmp"].active{background:#f0f0f0;border-color:#444;color:#222}
+.section-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
+.panel{display:none}.panel.active{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.loop-card{border:1px solid #e8e8e8;border-radius:12px;padding:1rem;background:#fff}
+.loop-type{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;margin-bottom:.5rem}
+.loop-name{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:.4rem}
+.loop-logic{font-size:12.5px;color:#555;line-height:1.55}
+.loop-arrow{color:#bbb;margin:0 2px}
+.implication{font-size:12px;color:#666;border-left:2px solid #ddd;padding-left:.65rem;margin-top:.65rem;font-style:italic;line-height:1.5}
+.rp{background:#EAF3DE;color:#27500A}
+.rm{background:#FCEBEB;color:#791F1F}
+.rb{background:#FEF9E7;color:#7D6608}
+.domain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem}
+@media(max-width:500px){.domain-grid{grid-template-columns:repeat(2,1fr)}}
+.domain-card{border:1px solid #e8e8e8;border-radius:8px;padding:.75rem;background:#fafafa}
+.domain-label{font-size:11px;color:#888;margin-bottom:.3rem}
+.domain-bar-wrap{height:6px;background:#e8e8e8;border-radius:3px;margin-bottom:.35rem}
+.domain-bar{height:6px;border-radius:3px;transition:width .4s}
+.domain-val{font-size:12px;font-weight:600;color:#333}
+.signal-wrap{margin-bottom:1rem}
+.signal-row{display:flex;gap:.5rem;align-items:flex-start;padding:.5rem .75rem;border-radius:8px;margin-bottom:.4rem;font-size:12.5px;line-height:1.45}
+.signal-pos{background:#EAF3DE;color:#1A5226}
+.signal-neg{background:#FDEDEC;color:#7B241C}
+.signal-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:.3rem}
+.dot-pos{background:#1E8449}
+.dot-neg{background:#C0392B}
+.compare-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:1rem}
+.compare-table th{font-size:11px;font-weight:600;color:#888;padding:6px 10px;border-bottom:1px solid #e8e8e8;text-align:left}
+.compare-table td{padding:8px 10px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
+.compare-table tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+.b-c1{background:#E6F1FB;color:#0C447C}
+.b-c2{background:#EAF3DE;color:#27500A}
+.b-c3{background:#FCEBEB;color:#791F1F}
+.b-c4{background:#EEEDFE;color:#3C3489}
+.b-hi{background:#EAF3DE;color:#1A5226}
+.b-med{background:#FEF9E7;color:#7D6608}
+.b-lo{background:#FDEDEC;color:#7B241C}
+.b-na{background:#f0f0f0;color:#666}
+.section-sep{border:none;border-top:1px solid #eee;margin:1.25rem 0}
+.scenario-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:1.25rem;padding:1rem;border-radius:12px;border:1px solid #e8e8e8;background:#fff}
+.sh-accent{width:4px;flex-shrink:0;border-radius:2px;align-self:stretch}
+.sh-c1{background:#185FA5}
+.sh-c2{background:#3B6D11}
+.sh-c3{background:#A32D2D}
+.sh-c4{background:#534AB7}
+.sh-title{font-size:16px;font-weight:600;color:#1a1a1a;margin-bottom:.2rem}
+.sh-axes{font-size:12px;color:#888}
+.intervention-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:500px){.intervention-grid{grid-template-columns:1fr}}
+.note{font-size:12px;color:#999;margin-top:2rem;padding-top:1rem;border-top:1px solid #eee}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>AP 2035 · Sistemas Complexos</h1>
+  <p class="subtitle">Administração Pública Portuguesa na Era da Inteligência Artificial · Loops de realimentação e impactos por cenário</p>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-s="c1">C1 · O Estado que Governa</button>
+    <button class="tab" data-s="c2">C2 · A AP Eficiente</button>
+    <button class="tab" data-s="c3">C3 · Automatização sem Controlo</button>
+    <button class="tab" data-s="c4">C4 · Competência sem Soberania</button>
+    <button class="tab" data-s="cmp">Comparação</button>
+  </div>
+
+  <!-- C1 -->
+  <div id="c1" class="panel active">
+    <div class="scenario-header">
+      <div class="sh-accent sh-c1"></div>
+      <div>
+        <div class="sh-title">C1 — O Estado que Governa</div>
+        <div class="sh-axes">Autoridade democrática · Aumento da capacitação humana</div>
+      </div>
+    </div>
+    <p class="section-title">Loops de realimentação</p>
+    <div class="grid2">
+      <div class="loop-card">
+        <span class="loop-type rp">R+ reforço</span>
+        <div class="loop-name">Loop de confiança</div>
+        <div class="loop-logic">Correções dos trabalhadores <span class="loop-arrow">→</span> sistema melhora <span class="loop-arrow">→</span> confiança cresce <span class="loop-arrow">→</span> dados de melhor qualidade <span class="loop-arrow">→</span> modelos mais precisos <span class="loop-arrow">→</span> serviços melhoram</div>
+        <div class="implication">Motor central de C1. Condição crítica: existir sempre uma Margarida com tempo, competência e autoridade para abrir o processo e preencher o formulário de anomalia.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rp">R+ reforço</span>
+        <div class="loop-name">Loop de capacitação e legitimidade</div>
+        <div class="loop-logic">Trabalhadores corrigem erros de forma visível <span class="loop-arrow">→</span> cidadãos reconhecem responsabilidade <span class="loop-arrow">→</span> legitimidade <span class="loop-arrow">→</span> apoio ao investimento em capacitação <span class="loop-arrow">→</span> mais competência interna</div>
+        <div class="implication">Consequência contraintuitiva: o investimento em formação de trabalhadores capazes de questionar sistemas contribui para reforçar a confiança pública e o capital político do modelo.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rb">B equilíbrio</span>
+        <div class="loop-name">Loop de erosão gradual</div>
+        <div class="loop-logic">Alternância política <span class="loop-arrow">→</span> reorientação de prioridades <span class="loop-arrow">→</span> redução de capacitação e reguladores <span class="loop-arrow">→</span> pressão para automatizar sem governação</div>
+        <div class="implication">O cenário não colapsa por decisão — corrói-se por omissão acumulada. Sinal de alerta: descida da taxa de inversão de decisões algorítmicas sem interpretação institucional do seu significado.</div>
+      </div>
+    </div>
+    <hr class="section-sep">
+    <p class="section-title">Impactos por domínio</p>
+    <div class="domain-grid" id="d-c1"></div>
+    <hr class="section-sep">
+    <p class="section-title">Sinais de alerta precoce</p>
+    <div class="signal-wrap" id="s-c1"></div>
+  </div>
+
+  <!-- C2 -->
+  <div id="c2" class="panel">
+    <div class="scenario-header">
+      <div class="sh-accent sh-c2"></div>
+      <div>
+        <div class="sh-title">C2 — A AP Eficiente</div>
+        <div class="sh-axes">Autoridade democrática · Substituição da intervenção humana</div>
+      </div>
+    </div>
+    <p class="section-title">Loops de realimentação</p>
+    <div class="grid2">
+      <div class="loop-card">
+        <span class="loop-type rp">R+ reforço</span>
+        <div class="loop-name">Loop de eficiência e aprovação</div>
+        <div class="loop-logic">Automatização reduz custos <span class="loop-arrow">→</span> métricas melhoram <span class="loop-arrow">→</span> confiança no modelo aumenta <span class="loop-arrow">→</span> novas automatizações aprovadas</div>
+        <div class="implication">Produz ganhos reais mas depende da estabilidade das condições iniciais. Funciona enquanto a maioria dos casos se enquadra nas categorias previstas.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rm">R− degradação</span>
+        <div class="loop-name">Loop de redução da supervisão</div>
+        <div class="loop-logic">Supervisão residual <span class="loop-arrow">→</span> menos erros detetados <span class="loop-arrow">→</span> menor pressão para corrigir <span class="loop-arrow">→</span> redução adicional da supervisão</div>
+        <div class="implication">Manuel valida 145 processos em 4 minutos cada porque o sistema de incentivos penaliza quem questiona. O problema não é comportamental — é sistémico. 89% das reclamações encerradas automaticamente não aparecem nos indicadores.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rb">B equilíbrio</span>
+        <div class="loop-name">Loop de saturação dos mecanismos de recurso</div>
+        <div class="loop-logic">Casos excecionais aumentam <span class="loop-arrow">→</span> sobrecarga dos canais de recurso <span class="loop-arrow">→</span> pressão para limitar o recurso <span class="loop-arrow">→</span> mais decisões sem revisão</div>
+        <div class="implication">O equilíbrio é mantido pela redução dos casos que chegam ao mecanismo de recurso, não pela melhoria da capacidade de resposta.</div>
+      </div>
+    </div>
+    <hr class="section-sep">
+    <p class="section-title">Impactos por domínio</p>
+    <div class="domain-grid" id="d-c2"></div>
+    <hr class="section-sep">
+    <p class="section-title">Sinais de alerta precoce</p>
+    <div class="signal-wrap" id="s-c2"></div>
+  </div>
+
+  <!-- C3 -->
+  <div id="c3" class="panel">
+    <div class="scenario-header">
+      <div class="sh-accent sh-c3"></div>
+      <div>
+        <div class="sh-title">C3 — Automatização sem Controlo</div>
+        <div class="sh-axes">Autoridade algorítmica · Substituição da intervenção humana</div>
+      </div>
+    </div>
+    <p class="section-title">Loops de realimentação</p>
+    <div class="grid2">
+      <div class="loop-card">
+        <span class="loop-type rm">R− degradação</span>
+        <div class="loop-name">Loop de opacidade crescente</div>
+        <div class="loop-logic">Dependência de fornecedores <span class="loop-arrow">→</span> redução da auditoria interna <span class="loop-arrow">→</span> mais dependência <span class="loop-arrow">→</span> aumento da opacidade</div>
+        <div class="implication">Cada renovação contratual sem cláusulas de auditabilidade aumenta o custo de substituição. O Estado nunca negociou o direito de saber o que Pedro Almeida sabe.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rm">R− degradação</span>
+        <div class="loop-name">Loop de erosão da fiscalização</div>
+        <div class="loop-logic">Redução da capacidade de supervisão <span class="loop-arrow">→</span> menos problemas identificados <span class="loop-arrow">→</span> menor pressão para reforçar <span class="loop-arrow">→</span> nova redução</div>
+        <div class="implication">Os sinais de alerta não surgem porque os mecanismos que os produziriam foram progressivamente enfraquecidos. A CNPD passou de 23 para 11 técnicos especializados em três anos — sem incidente visível.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rb">B equilíbrio</span>
+        <div class="loop-name">Loop de resposta pontual a crises</div>
+        <div class="loop-logic">Incidente grave <span class="loop-arrow">→</span> pressão para resposta imediata <span class="loop-arrow">→</span> medidas corretivas limitadas <span class="loop-arrow">→</span> retorno ao funcionamento habitual</div>
+        <div class="implication">Reformas reativas criam estruturas formais de controlo sem resolver a ausência de capacidade técnica. C3 pode gerar uma versão mais regulada de si próprio em vez de transitar para C1.</div>
+      </div>
+    </div>
+    <hr class="section-sep">
+    <p class="section-title">Impactos por domínio</p>
+    <div class="domain-grid" id="d-c3"></div>
+    <hr class="section-sep">
+    <p class="section-title">Sinais de alerta precoce</p>
+    <div class="signal-wrap" id="s-c3"></div>
+  </div>
+
+  <!-- C4 -->
+  <div id="c4" class="panel">
+    <div class="scenario-header">
+      <div class="sh-accent sh-c4"></div>
+      <div>
+        <div class="sh-title">C4 — Competência sem Soberania</div>
+        <div class="sh-axes">Autoridade algorítmica · Aumento da capacitação humana</div>
+      </div>
+    </div>
+    <p class="section-title">Loops de realimentação</p>
+    <div class="grid2">
+      <div class="loop-card">
+        <span class="loop-type rp">R+ reforço</span>
+        <div class="loop-name">Loop de capacitação técnica</div>
+        <div class="loop-logic">Investimento em formação <span class="loop-arrow">→</span> melhoria de resultados <span class="loop-arrow">→</span> reforço da justificação para mais formação</div>
+        <div class="implication">Produz competência real mas não garante controlo sobre a infraestrutura. Filipa sabe que algo mudou no modelo fundacional — não tem acesso para saber o quê.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rm">R− degradação</span>
+        <div class="loop-name">Loop de dependência contratual</div>
+        <div class="loop-logic">Sistemas com bom desempenho <span class="loop-arrow">→</span> renovação de contratos <span class="loop-arrow">→</span> aprofundamento da dependência <span class="loop-arrow">→</span> aumento do custo de saída <span class="loop-arrow">→</span> nova renovação</div>
+        <div class="implication">A prisão dourada não resulta de ignorância — resulta de uma arquitectura de incentivos que torna cada decisão de dependência mais racional do que cada decisão de soberania.</div>
+      </div>
+      <div class="loop-card">
+        <span class="loop-type rb">B equilíbrio</span>
+        <div class="loop-name">Loop de crise e reação externa</div>
+        <div class="loop-logic">Tensão externa <span class="loop-arrow">→</span> risco de interrupção de fornecimento <span class="loop-arrow">→</span> necessidade de alternativas <span class="loop-arrow">→</span> investimento em capacidade própria</div>
+        <div class="implication">O investimento em alternativas tende a ocorrer em contexto de urgência, quando os custos de transição são mais elevados. A diferença entre colapso e transformação depende de decisões tomadas antes do choque.</div>
+      </div>
+    </div>
+    <hr class="section-sep">
+    <p class="section-title">Impactos por domínio</p>
+    <div class="domain-grid" id="d-c4"></div>
+    <hr class="section-sep">
+    <p class="section-title">Sinais de alerta precoce</p>
+    <div class="signal-wrap" id="s-c4"></div>
+  </div>
+
+  <!-- COMPARAÇÃO -->
+  <div id="cmp" class="panel">
+    <p class="section-title">Comparação entre cenários — impactos por domínio</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:170px">Domínio</th>
+          <th><span class="badge b-c1">C1</span></th>
+          <th><span class="badge b-c2">C2</span></th>
+          <th><span class="badge b-c3">C3</span></th>
+          <th><span class="badge b-c4">C4</span></th>
+        </tr>
+      </thead>
+      <tbody id="cmp-body"></tbody>
+    </table>
+    <hr class="section-sep">
+    <p class="section-title">Estrutura de loops por cenário</p>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:170px">Tipo de loop</th>
+          <th><span class="badge b-c1">C1</span></th>
+          <th><span class="badge b-c2">C2</span></th>
+          <th><span class="badge b-c3">C3</span></th>
+          <th><span class="badge b-c4">C4</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="color:#666;font-size:12px">R+ reforço</td>
+          <td><span class="badge b-hi">2</span></td>
+          <td><span class="badge b-hi">1</span></td>
+          <td><span class="badge b-lo">0</span></td>
+          <td><span class="badge b-hi">1</span></td>
+        </tr>
+        <tr>
+          <td style="color:#666;font-size:12px">R− degradação</td>
+          <td><span class="badge b-na">0</span></td>
+          <td><span class="badge b-med">1</span></td>
+          <td><span class="badge b-lo">2</span></td>
+          <td><span class="badge b-med">1</span></td>
+        </tr>
+        <tr>
+          <td style="color:#666;font-size:12px">B equilíbrio</td>
+          <td><span class="badge b-med">1</span></td>
+          <td><span class="badge b-med">1</span></td>
+          <td><span class="badge b-med">1</span></td>
+          <td><span class="badge b-med">1</span></td>
+        </tr>
+        <tr>
+          <td style="color:#666;font-size:12px;font-style:italic">Fragilidade estrutural</td>
+          <td><span class="badge b-med">Erosão silenciosa</span></td>
+          <td><span class="badge b-med">Escândalo latente</span></td>
+          <td><span class="badge b-lo">Normalização opaca</span></td>
+          <td><span class="badge b-med">Dependência crescente</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <hr class="section-sep">
+    <p class="section-title">Ponto de intervenção óptimo por cenário</p>
+    <div class="intervention-grid">
+      <div class="loop-card" style="border-left:3px solid #185FA5">
+        <div class="loop-name" style="font-size:13px">C1 → estabilidade</div>
+        <div class="loop-logic" style="font-size:12px;margin-top:.3rem">Proteger a taxa de inversão de decisões algorítmicas e o financiamento da CNPD nos primeiros orçamentos após mudança de governo.</div>
+      </div>
+      <div class="loop-card" style="border-left:3px solid #3B6D11">
+        <div class="loop-name" style="font-size:13px">C2 → correcção</div>
+        <div class="loop-logic" style="font-size:12px;margin-top:.3rem">Auditar não apenas os outputs mas os processos de supervisão: quem reverteu, quantas vezes, com que fundamentação.</div>
+      </div>
+      <div class="loop-card" style="border-left:3px solid #A32D2D">
+        <div class="loop-name" style="font-size:13px">C3 → saída</div>
+        <div class="loop-logic" style="font-size:12px;margin-top:.3rem">Renegociar contratos críticos antes da próxima renovação. Cada ciclo sem cláusulas de auditabilidade aumenta o custo de saída de forma não linear.</div>
+      </div>
+      <div class="loop-card" style="border-left:3px solid #534AB7">
+        <div class="loop-name" style="font-size:13px">C4 → transição</div>
+        <div class="loop-logic" style="font-size:12px;margin-top:.3rem">Calcular o custo real de saída dos três principais contratos. Iniciar participação em consórcio europeu ou lusófono antes da crise — não durante.</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">AP 2035 · Estudo Prospetivo — Impacto da IA na Administração Pública Portuguesa · ARTE / Adaptive Pathways Strategic Advisory · Março 2026</p>
+</div>
+
+<script>
+const domains=[
+  {k:"Governação democrática",c:[90,60,15,30]},
+  {k:"Auditabilidade dos sistemas",c:[85,45,10,50]},
+  {k:"Capacitação humana",c:[90,55,25,85]},
+  {k:"Soberania tecnológica",c:[65,40,20,25]},
+  {k:"Inclusão digital",c:[80,45,25,60]},
+  {k:"Resiliência operacional",c:[85,40,15,45]}
+];
+const colors=["#185FA5","#3B6D11","#A32D2D","#534AB7"];
+const scs=["c1","c2","c3","c4"];
+
+function lvl(v){
+  if(v>=75)return"<span class='badge b-hi'>Alto</span>";
+  if(v>=45)return"<span class='badge b-med'>Médio</span>";
+  return"<span class='badge b-lo'>Baixo</span>";
+}
+
+scs.forEach((s,i)=>{
+  const el=document.getElementById("d-"+s);
+  domains.forEach(d=>{
+    const v=d.c[i];
+    el.innerHTML+=`<div class="domain-card">
+      <div class="domain-label">${d.k}</div>
+      <div class="domain-bar-wrap"><div class="domain-bar" style="width:${v}%;background:${colors[i]}"></div></div>
+      <div class="domain-val">${v}%</div>
+    </div>`;
+  });
+});
+
+const signals={
+  c1:{
+    pos:["Lei de Governação da IA aprovada com orçamento autónomo para o Conselho Nacional de Governação Algorítmica","Catálogo Nacional de Dados com pelo menos 50 conjuntos críticos certificados","Auditoria algorítmica reconhecida como carreira específica na AP","Plano de financiamento recorrente pós-PRR aprovado para sistemas críticos","Relatório anual público sobre incidentes algorítmicos publicado de forma regular"],
+    neg:["Acordos sindicais formalmente assinados mas com incumprimento dos calendários de implementação","Rescisões contratuais por incumprimento de cláusulas de auditabilidade inexistentes ou não aplicadas","Orçamento da CNPD em declínio real face ao aumento de responsabilidades","Taxa de inversão de decisões algorítmicas após revisão humana a aproximar-se de zero","Redução de financiamento de canais presenciais sem decisão política explícita"]
+  },
+  c2:{
+    pos:["Taxa de automatização superior a 60% em serviços de elevado volume sem revisão proporcional dos mecanismos de supervisão","Redução significativa de trabalhadores em serviços de prestação direta","Mecanismos formais de supervisão criados sem dotação orçamental própria","Programas de requalificação centrados em validação operacional sem capacidade crítica"],
+    neg:["Taxa de reversão algorítmica inferior a 1% sem justificação técnica publicada","Tempo médio de resolução de reclamações superior a 30 dias úteis","Encerramento progressivo de canais presenciais sem declaração pública de alteração do modelo de serviço","Comissão parlamentar de acompanhamento sem acesso técnico aos modelos que supervisiona","Aumento do número de reclamações encerradas automaticamente com base em critérios formais"]
+  },
+  c3:{
+    pos:["Quadros de governação aprovados sem dotação orçamental suficiente para a sua implementação","Redução do número de técnicos na CNPD por saídas não substituídas","Contratos sem cláusulas de auditabilidade, portabilidade ou reversibilidade","Inexistência de função formal de auditoria algorítmica na Administração Pública"],
+    neg:["Nenhuma rescisão contratual por incumprimento de requisitos de transparência nos últimos 24 meses","Ausência de relatórios públicos sobre incidentes algorítmicos há mais de 12 meses","Fornecedores com acesso a níveis de detalhe de dados superiores aos disponíveis para o organismo público","Eliminação da capacidade de operação manual em sistemas com impacto direto em direitos fundamentais"]
+  },
+  c4:{
+    pos:["Investimento continuado em formação técnica avançada na Administração Pública","Renovações contratuais com hyperscalers sem cláusulas de portabilidade ou reversibilidade","Adoção de alternativas europeias por decisão política, mesmo com menor maturidade técnica inicial"],
+    neg:["Custo de saída de contratos principais superior a 18 meses do orçamento de TI","Ausência de auditoria externa com acesso independente aos modelos fundacionais utilizados","Alterações unilaterais de fornecedores com impacto em serviços críticos e pré-aviso inferior a 60 dias","Ausência de participação portuguesa em consórcios de desenvolvimento de modelos fundacionais abertos","Fuga consistente de talento técnico do sector público para fornecedores dos próprios sistemas"]
+  }
+};
+
+scs.forEach(s=>{
+  const el=document.getElementById("s-"+s);
+  const sig=signals[s];
+  let html='<div style="font-size:11px;font-weight:600;color:#888;margin-bottom:.4rem">Convergência para este cenário</div>';
+  sig.pos.forEach(t=>{
+    html+=`<div class="signal-row signal-pos"><span class="signal-dot dot-pos"></span><span>${t}</span></div>`;
+  });
+  html+='<div style="font-size:11px;font-weight:600;color:#888;margin:.75rem 0 .4rem">Erosão dos pilares do cenário</div>';
+  sig.neg.forEach(t=>{
+    html+=`<div class="signal-row signal-neg"><span class="signal-dot dot-neg"></span><span>${t}</span></div>`;
+  });
+  el.innerHTML=html;
+});
+
+const tb=document.getElementById("cmp-body");
+domains.forEach(d=>{
+  let row=`<tr><td style="font-size:12.5px;color:#666">${d.k}</td>`;
+  d.c.forEach(v=>row+=`<td>${lvl(v)}</td>`);
+  row+="</tr>";
+  tb.innerHTML+=row;
+});
+
+document.getElementById("tabs").addEventListener("click",e=>{
+  const btn=e.target.closest(".tab");
+  if(!btn)return;
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById(btn.dataset.s).classList.add("active");
+});
+</script>
+</body>
+</html>
